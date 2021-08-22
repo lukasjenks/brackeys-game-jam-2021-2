@@ -8,12 +8,22 @@ public class Projectile : MonoBehaviour
     public float speed;
     public Vector3 direction;
     private Vector3 _startVector;
+    private Collider _collider;
 
     void Start()
     {
         _startVector = transform.position;
-        Debug.Log(_startVector);
-        Debug.Log(direction);
+        _collider = GetComponent<Collider>();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Enemy")
+        {
+            Debug.Log("Hit enemy!");
+        }
+
+        Destroy(gameObject); // destroy the projectile
     }
 
     // Update is called once per frame

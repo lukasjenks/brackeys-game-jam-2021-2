@@ -5,7 +5,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637652508500000000
+      ticks: 637652512620000000
     m_Hash: 799346875
   m_LockFileStatus:
     m_FilePath: /home/lukas/Documents/Projects/brackeys-jam-2021-2/Packages/packages-lock.json
@@ -13,7 +13,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637652508500000000
+      ticks: 637652512740000000
     m_Hash: 3958101576
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}

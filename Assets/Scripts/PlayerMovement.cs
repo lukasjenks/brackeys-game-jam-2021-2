@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         // 3D vector to 2D vector
-        var TargetVector = new Vector3(input.InputVector.x, 0, input.InputVector.y);
+        var targetVector = new Vector3(input.InputVector.x, 0, input.InputVector.y);
 
         // Move in dir of aim
         MoveTowardTarget(targetVector);

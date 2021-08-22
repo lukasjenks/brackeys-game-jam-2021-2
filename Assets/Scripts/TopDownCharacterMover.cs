@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(InputHandler))]
 public class TopDownCharacterMover : MonoBehaviour
 {
-    private InputHandler _input;
+    private InputHandler playerInput;
 
     [SerializeField]
     private bool RotateTowardMouse;
@@ -22,13 +22,13 @@ public class TopDownCharacterMover : MonoBehaviour
 
     private void Awake()
     {
-        _input = GetComponent<InputHandler>();
+        playerInput = GetComponent<InputHandler>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        var targetVector = new Vector3(_input.InputVector.x, 0, _input.InputVector.y);
+        var targetVector = new Vector3(playerInput.InputVector.x, 0, playerInput.InputVector.y);
         var movementVector = MoveTowardTarget(targetVector);
 
         if (!RotateTowardMouse) {
@@ -41,7 +41,7 @@ public class TopDownCharacterMover : MonoBehaviour
 
     private void RotateFromMouseVector()
     {
-        Ray ray = Camera.ScreenPointToRay(_input.MousePosition);
+        Ray ray = Camera.ScreenPointToRay(playerInput.MousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance: 300f)) {
             var target = hitInfo.point;

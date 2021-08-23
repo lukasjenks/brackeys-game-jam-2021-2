@@ -8,10 +8,10 @@ public class MachineGun : WeaponEntity
     {
         _name = "MACHINE_GUN";
         _damage = 25.0f;
-        _rateOfFire = 50.0f;
+        _rateOfFire = 5000.0f;
         _range = 50.0f;
-        _projectileSpeed = 3.5f;
         _type = WeaponType.PROJECTILE;
-        _projectile = "ROCKET_PROJECTILE";
+        _projectileSpeed = 2.0f;
+        _projectile = "MACHINE_GUN_PROJECTILE";
     }
 }

@@ -2,11 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface IWeaponEntity
+{
+    void Die();
+}
+
 public enum WeaponType
 {
-    PROJECTILE,
-    AREA
+    PROJECTILE, // rocket launcher, spear gun
+    AREA, // Flame thrower, ice shooter etc
+    PRECISE // Machine gun, shotgun
 }
+
 
 public class WeaponEntity
 {
@@ -16,6 +23,8 @@ public class WeaponEntity
     protected float _rateOfFire;
     protected float _projectileSpeed;
     protected float _range;
+    protected float _sphereCastRadius;
+    protected string _particleEffectName;
     protected string _projectile;
     protected WeaponType _type;
 
@@ -59,5 +68,28 @@ public class WeaponEntity
     {
         get { return _range; }
         set { _range = value; }
+    }
+
+    public WeaponType Type
+    {
+        get { return _type; }
+        set { _type = value; }
+    }
+
+    public string ParticleEffect
+    {
+        get { return _particleEffectName; }
+        set { _particleEffectName = value; }
+    }
+
+    public void Hit(Vector3 start, Vector3 dest)
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(start, dest, out hit, _range))
+        {
+            Debug.Log(hit);
+            Debug.Log(hit.collider.gameObject);
+        }
     }
 }

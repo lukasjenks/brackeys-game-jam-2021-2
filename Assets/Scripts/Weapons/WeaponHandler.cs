@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WeaponHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
     private int _currentWeapon;
 
     private List<WeaponEntity> _weapons = new List<WeaponEntity> {
@@ -66,7 +65,8 @@ public class WeaponHandler : MonoBehaviour
             projectileScript.range = weapon.Range;
             projectileScript.direction = parent.transform.forward;
             projectileScript.speed = weapon.ProjectileSpeed;
-            Instantiate(projectile, parent.transform.position, parent.transform.rotation * Quaternion.Euler(0, 90, 0));
+            projectileScript.type = weapon.Name;
+            Instantiate(projectile, parent.transform.position, projectile.transform.rotation);
         }
         else if (weapon.Type == WeaponType.AREA)
         {

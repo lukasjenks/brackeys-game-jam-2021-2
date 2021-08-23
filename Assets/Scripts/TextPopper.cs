@@ -17,7 +17,7 @@ public class TextPopper : MonoBehaviour
         _text = GetComponentInChildren<Text>(); // get the child text component here
         _image = GetComponentInChildren<Image>();
         _canvas = GetComponent<CanvasGroup>();
-        ShowFlickerText("Rise and Shine...");
+        // ShowFlickerText("Rise and Shine...");
     }
     public void SetDisplayText(string value)
     {

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPrecisionWeapon
+public interface IWeaponEntity
 {
-    void Hit(Vector3 start, Vector3 dest);
+    void Die();
 }
 
 public enum WeaponType

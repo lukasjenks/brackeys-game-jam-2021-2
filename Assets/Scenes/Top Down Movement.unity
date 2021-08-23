@@ -213,6 +213,7 @@ Transform:
   m_LocalRotation: {x: 0.45188564, y: 0.625329, z: -0.31471428, w: 0.5529177}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -270,7 +271,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 10.69
   m_Depth: -1
   m_CullingMask:
@@ -297,6 +298,7 @@ Transform:
   m_LocalRotation: {x: 0.60876137, y: 0, z: 0, w: 0.7933534}
   m_LocalPosition: {x: 0, y: 30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -335,10 +337,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a116a6b2e6ba154391d1a695ea81d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotateTowardMouse: 1
-  MovementSpeed: 4
-  RotationSpeed: 5
-  Camera: {fileID: 963194227}
+  rotateTowardMouse: 1
+  rotationSpeed: 1
+  playerCamera: {fileID: 963194227}
+  baseSpeed: 5
+  sprintSpeed: 7
+  speedShiftMultiplier: 2
+  jumpForce: 6
 --- !u!114 &1500701438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,6 +400,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -443,6 +449,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -513,6 +520,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 621097541372514847, guid: 8e2e1e0d075144a49b9af20827814832,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e2e1e0d075144a49b9af20827814832, type: 3}

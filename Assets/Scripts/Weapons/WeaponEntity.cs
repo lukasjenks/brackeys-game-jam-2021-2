@@ -21,6 +21,7 @@ public class WeaponEntity
     protected string _name;
     protected float _damage;
     protected float _rateOfFire;
+    protected float _areaOfEffect;
     protected float _projectileSpeed;
     protected float _range;
     protected float _sphereCastRadius;
@@ -32,6 +33,12 @@ public class WeaponEntity
     {
         get { return _rateOfFire; }
         set { _rateOfFire = value; }
+    }
+
+    public float AreaOfEffect
+    {
+        get { return _areaOfEffect; }
+        set { _areaOfEffect = value; }
     }
 
     public float Damage

@@ -63,10 +63,12 @@ public class WeaponHandler : MonoBehaviour
 
             Projectile projectileScript = projectile.GetComponent<Projectile>();
             projectileScript.range = weapon.Range;
-            projectileScript.direction = parent.transform.forward;
+            projectileScript.direction = transform.right;
             projectileScript.speed = weapon.ProjectileSpeed;
             projectileScript.type = weapon.Name;
-            Instantiate(projectile, parent.transform.position, projectile.transform.rotation);
+            projectileScript.damage = weapon.Damage;
+            projectileScript.areaOfEffect = weapon.AreaOfEffect;
+            Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
         }
         else if (weapon.Type == WeaponType.AREA)
         {

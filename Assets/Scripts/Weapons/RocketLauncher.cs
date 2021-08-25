@@ -11,7 +11,7 @@ public class RocketLauncher : WeaponEntity
         _rateOfFire = 1.0f;
         _range = 100.0f;
         _projectileSpeed = 0.5f;
-        _areaOfEffect = 10.0f;
+        _areaOfEffect = 5.0f;
         _type = WeaponType.PROJECTILE;
         _projectile = "ROCKET_PROJECTILE";
     }

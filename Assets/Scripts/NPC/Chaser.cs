@@ -5,15 +5,15 @@ using UnityEngine.AI;
 
 namespace NPC
 {
-    public class Creep : NPC.Enemy
+    public class Chaser : NPC.Enemy
     {
-        public Creep(NavMeshAgent a) : base(a)
+        public Chaser(NavMeshAgent a) : base(a)
         {
-            MovementSpeed = 15;
+            MovementSpeed = 4;
             AngularSpeed = 140;
             Acceleration = 8;
-            StoppingDistance = 15;
-            Health = 100f;
+            StoppingDistance = 1;
+            Health = 250f;
         }
     }
 }

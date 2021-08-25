@@ -117,6 +117,8 @@ MonoBehaviour:
   speed: 0
   direction: {x: 0, y: 0, z: 0}
   type: 
+  damage: 0
+  areaOfEffect: 0
 --- !u!1 &4052759569292752834
 GameObject:
   m_ObjectHideFlags: 0

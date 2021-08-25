@@ -13,6 +13,6 @@ public class MachineGun : WeaponEntity
         _type = WeaponType.PROJECTILE;
         _projectileSpeed = 2.0f;
         _projectile = "MACHINE_GUN_PROJECTILE";
-        _areaOfEffect = 0;
+        _areaOfEffect = 1;
     }
 }

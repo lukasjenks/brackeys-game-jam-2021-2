@@ -43,6 +43,15 @@ public class TopDownCharacterMover : MonoBehaviour
 
     private int elapsedFrames;
 
+    private Vector3 _velocity;
+    private Vector3 _lastFramePosition;
+
+    public Vector3 Velocity
+    {
+        get { return _velocity; }
+        set { _velocity = value; }
+    }
+
     private void Awake()
     {
         playerInput = GetComponent<InputHandler>();
@@ -56,34 +65,45 @@ public class TopDownCharacterMover : MonoBehaviour
     {
         var targetVector = new Vector3(playerInput.inputVector.x, 0, playerInput.inputVector.y);
         var movementVector = MoveTowardTarget(targetVector);
+        _velocity = _lastFramePosition - transform.position;
 
-        if (!rotateTowardMouse) {
+        if (!rotateTowardMouse)
+        {
             RotateTowardMovementVector(movementVector);
         }
-        if (rotateTowardMouse) {
+        if (rotateTowardMouse)
+        {
             RotateFromMouseVector();
         }
 
-        if (playerInput.shiftPressed) {
-            if (sprinting) {
+        if (playerInput.shiftPressed)
+        {
+            if (sprinting)
+            {
                 moveSpeed = baseSpeed;
                 sprinting = false;
-            } else {
+            }
+            else
+            {
                 moveSpeed = sprintSpeed;
                 sprinting = true;
             }
         }
 
-        if (playerInput.spacePressed) {
-            rb.velocity = new Vector3 (rb.velocity.x, jumpForce, rb.velocity.z);
+        if (playerInput.spacePressed)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
         }
+
+        _lastFramePosition = transform.position;
     }
 
     private void RotateFromMouseVector()
     {
         Ray ray = playerCamera.ScreenPointToRay(playerInput.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance: 300f)) {
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance: 300f))
+        {
             var target = hitInfo.point;
             target.y = transform.position.y;
             transform.LookAt(target);
@@ -102,8 +122,9 @@ public class TopDownCharacterMover : MonoBehaviour
 
     private void RotateTowardMovementVector(Vector3 movementDirection)
     {
-        if (movementDirection.magnitude == 0) { 
-            return; 
+        if (movementDirection.magnitude == 0)
+        {
+            return;
         }
         var rotation = Quaternion.LookRotation(movementDirection);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed);

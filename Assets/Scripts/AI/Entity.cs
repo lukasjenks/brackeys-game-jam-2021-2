@@ -78,6 +78,10 @@ namespace AI
             _agent.SetDestination(dest);
         }
 
+        // Gets the vector of the velocity relative to the game object's position
+        public Vector3 GetVelocityRelative(Rigidbody r, Transform t)
+        {
+            return r.velocity - t.position;
+        }
     }
-
 }

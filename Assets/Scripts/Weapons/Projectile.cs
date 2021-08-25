@@ -14,6 +14,9 @@ public class Projectile : MonoBehaviour
     private Collider _collider;
     private bool _dying;
 
+    private const int _DAMAGE_LAYER = 1 << 6;
+
+
     void Start()
     {
         _startVector = transform.position;
@@ -22,41 +25,22 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (areaOfEffect > 0) // make sure there's even an effect to calculate here
+        // check if any nearby enemies
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, areaOfEffect, _DAMAGE_LAYER);
+
+        foreach (var hitCollider in hitColliders)
         {
-
-            // check if any nearby enemies
-            List<GameObject> objectList = new List<GameObject>(NPC.Manager.npcDict.Values);
-
-            foreach (var value in objectList)
+            var distance = Vector3.Distance(transform.position, hitCollider.gameObject.transform.position);
+            if (hitCollider.gameObject.tag == "Enemy" && distance <= areaOfEffect)
             {
-                // if its within area of effect for this weapon type, we deal dmg based on dmg/distance
-                var distance = Vector3.Distance(transform.position, value.transform.position);
-                Debug.Log(distance);
-
-                if (distance <= areaOfEffect && value.GetInstanceID() != other.gameObject.GetInstanceID())
+                EnemyMovementHandler tempEnemyHandler = hitCollider.gameObject.GetComponent<EnemyMovementHandler>();
+                if (tempEnemyHandler.enemyScript.TakeDamage(damage / distance))
                 {
-                    EnemyMovementHandler tempEnemyHandler = value.GetComponent<EnemyMovementHandler>();
-                    Debug.Log("Dealt splash damage of: " + damage / distance);
-                    if (tempEnemyHandler.enemyScript.TakeDamage(damage / distance))
-                    {
-                        NPC.Manager.npcDict.Remove(value.GetInstanceID().ToString());
-                        Destroy(value);
-                    }
+                    NPC.Manager.npcDict.Remove(hitCollider.gameObject.GetInstanceID().ToString());
+                    Destroy(hitCollider.gameObject);
                 }
             }
         }
-
-        if (other.gameObject.tag == "Enemy")
-        {
-            EnemyMovementHandler enemyHandler = other.gameObject.GetComponent<EnemyMovementHandler>();
-            if (enemyHandler.enemyScript.TakeDamage(damage))
-            {
-                NPC.Manager.npcDict.Remove(other.gameObject.GetInstanceID().ToString());
-                Destroy(other.gameObject);
-            }
-        }
-
         if (!_dying)
         {
             _OnDeath();

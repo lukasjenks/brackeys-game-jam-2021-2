@@ -27,6 +27,7 @@ public class PlayerCameraController : MonoBehaviour
         playerPos.y = playerPos.y - yOffset;
         playerPos.z = playerPos.z - zOffset;
         // adjust camera pos with calc'ed vals
-        transform.position = playerPos;
+        //transform.position = playerPos;
+        transform.position = Vector3.MoveTowards(transform.position, playerPos, 1);
     }
 }

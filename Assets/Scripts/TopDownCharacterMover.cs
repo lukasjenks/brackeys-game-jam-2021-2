@@ -6,8 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(InputHandler))]
 public class TopDownCharacterMover : MonoBehaviour
 {
-    private InputHandler playerInput;
-
     [SerializeField]
     private bool rotateTowardMouse;
 
@@ -16,13 +14,6 @@ public class TopDownCharacterMover : MonoBehaviour
 
     [SerializeField]
     private Camera playerCamera;
-
-    private InputHandler input;
-
-    private Rigidbody rb;
-    // Start is called before the first frame update
-
-    private float moveSpeed;
 
     [SerializeField]
     private float baseSpeed;
@@ -36,12 +27,27 @@ public class TopDownCharacterMover : MonoBehaviour
     [SerializeField]
     private float jumpForce;
 
-    private bool sprinting;
-
     [SerializeField]
     private int interpolationRatio;
 
+    [SerializeField]
+    private float groundCheckDist = 1.0f;
+
+    private InputHandler playerInput;
+
+    private bool sprinting;
+
+    private bool isGrounded;
+
+    private bool isJumping; // for animations later
+
     private int elapsedFrames;
+
+    private InputHandler input;
+
+    private Rigidbody rb;
+
+    private float moveSpeed; // calculated from baseSpeed and sprintSpeed
 
     private void Awake()
     {
@@ -74,8 +80,15 @@ public class TopDownCharacterMover : MonoBehaviour
             }
         }
 
-        if (playerInput.spacePressed) {
-            rb.velocity = new Vector3 (rb.velocity.x, jumpForce, rb.velocity.z);
+        CheckGroundStatus();
+        if (isGrounded) {
+            if (playerInput.spacePressed) {
+                // jump
+                rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+                isGrounded = false;
+                isJumping = true;
+                groundCheckDist = 0.1f; // just before hitting the ground again
+            }
         }
     }
 
@@ -92,11 +105,9 @@ public class TopDownCharacterMover : MonoBehaviour
 
     private Vector3 MoveTowardTarget(Vector3 targetVector)
     {
-        var speed = moveSpeed * Time.deltaTime;
-
         targetVector = Quaternion.Euler(0, playerCamera.gameObject.transform.rotation.eulerAngles.y, 0) * targetVector;
-        var targetPosition = transform.position + targetVector * speed;
-        transform.position = targetPosition;
+        var targetPosition = transform.position + targetVector;
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, (moveSpeed / 10));
         return targetVector;
     }
 
@@ -108,4 +119,16 @@ public class TopDownCharacterMover : MonoBehaviour
         var rotation = Quaternion.LookRotation(movementDirection);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed);
     }
+
+    private void CheckGroundStatus()
+	{
+		RaycastHit hitInfo;
+		if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hitInfo, groundCheckDist)) {
+			isGrounded = true;
+            isJumping = false;
+		} else {
+			isGrounded = false;
+            isJumping = true;
+		}
+	}
 }

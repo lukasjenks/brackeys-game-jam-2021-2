@@ -271,7 +271,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 10.69
   m_Depth: -1
   m_CullingMask:
@@ -296,7 +296,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.60876137, y: 0, z: 0, w: 0.7933534}
-  m_LocalPosition: {x: 0, y: 30, z: 0}
+  m_LocalPosition: {x: 0, y: 30, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -315,9 +315,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 395145136c8364797889f346acb30a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 1500701435}
   xOffset: 0
-  yOffset: -10
+  yOffset: -20
   zOffset: 0
 --- !u!1 &1500701435 stripped
 GameObject:
@@ -340,10 +340,12 @@ MonoBehaviour:
   rotateTowardMouse: 1
   rotationSpeed: 1
   playerCamera: {fileID: 963194227}
-  baseSpeed: 5
-  sprintSpeed: 7
+  baseSpeed: 1
+  sprintSpeed: 2
   speedShiftMultiplier: 2
   jumpForce: 6
+  interpolationRatio: 0
+  groundCheckDist: 1
 --- !u!114 &1500701438
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -78,7 +78,7 @@ namespace Weapon
                     StartCoroutine(_WaitForExplosionToFinish(explosionInstance, gameObject));
                     break;
 
-                case "MACHINE_GUN":
+                case "MACHINE_GUN" or "SHOT_GUN":
                     Destroy(gameObject);
                     break;
 

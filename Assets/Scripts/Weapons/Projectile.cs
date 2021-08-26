@@ -14,6 +14,7 @@ namespace Weapon
         public float areaOfEffect;
         private Vector3 _startVector;
         private Collider _collider;
+        private NPC.Gibber _gibber;
         private bool _dying;
 
         private const int _DAMAGE_LAYER = 1 << 6;
@@ -23,6 +24,7 @@ namespace Weapon
         {
             _startVector = transform.position;
             _collider = GetComponent<Collider>();
+            _gibber = GameObject.Find("Gibber").GetComponent<NPC.Gibber>();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -38,6 +40,7 @@ namespace Weapon
                     EnemyMovementHandler tempEnemyHandler = hitCollider.gameObject.GetComponent<EnemyMovementHandler>();
                     if (tempEnemyHandler.enemyScript.TakeDamage(damage / distance))
                     {
+                        _gibber.Activate(transform.position);
                         NPC.Manager.npcDict.Remove(hitCollider.gameObject.GetInstanceID().ToString());
                         Destroy(hitCollider.gameObject);
                     }

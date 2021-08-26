@@ -2,101 +2,115 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+namespace Weapon
 {
-    public float range;
-    public float speed;
-    public Vector3 direction;
-    public string type;
-    public float damage;
-    public float areaOfEffect;
-    private Vector3 _startVector;
-    private Collider _collider;
-    private bool _dying;
-
-    private const int _DAMAGE_LAYER = 1 << 6;
-
-
-    void Start()
+    public class Projectile : MonoBehaviour
     {
-        _startVector = transform.position;
-        _collider = GetComponent<Collider>();
-    }
+        public float range;
+        public float speed;
+        public Vector3 direction;
+        public string type;
+        public float damage;
+        public float areaOfEffect;
+        private Vector3 _startVector;
+        private Collider _collider;
+        private bool _dying;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        // check if any nearby enemies
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, areaOfEffect, _DAMAGE_LAYER);
+        private const int _DAMAGE_LAYER = 1 << 6;
 
-        foreach (var hitCollider in hitColliders)
+
+        void Start()
         {
-            var distance = Vector3.Distance(transform.position, hitCollider.gameObject.transform.position);
-            if (hitCollider.gameObject.tag == "Enemy" && distance <= areaOfEffect)
+            _startVector = transform.position;
+            _collider = GetComponent<Collider>();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            // check if any nearby enemies
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, areaOfEffect, _DAMAGE_LAYER);
+
+            foreach (var hitCollider in hitColliders)
             {
-                EnemyMovementHandler tempEnemyHandler = hitCollider.gameObject.GetComponent<EnemyMovementHandler>();
-                if (tempEnemyHandler.enemyScript.TakeDamage(damage / distance))
+                var distance = Vector3.Distance(transform.position, hitCollider.gameObject.transform.position);
+                if (hitCollider.gameObject.tag == "Enemy" && distance <= areaOfEffect)
                 {
-                    NPC.Manager.npcDict.Remove(hitCollider.gameObject.GetInstanceID().ToString());
-                    Destroy(hitCollider.gameObject);
+                    EnemyMovementHandler tempEnemyHandler = hitCollider.gameObject.GetComponent<EnemyMovementHandler>();
+                    if (tempEnemyHandler.enemyScript.TakeDamage(damage / distance))
+                    {
+                        NPC.Manager.npcDict.Remove(hitCollider.gameObject.GetInstanceID().ToString());
+                        Destroy(hitCollider.gameObject);
+                    }
                 }
             }
-        }
-        if (!_dying)
-        {
-            _OnDeath();
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Vector3.Distance(_startVector, transform.position) < range && !_dying)
-        {
-            transform.position += direction * speed;
-        }
-        else
-        {
             if (!_dying)
             {
                 _OnDeath();
             }
         }
-    }
 
-    private void _OnDeath()
-    {
-        switch (type)
+        // Update is called once per frame
+        void Update()
         {
-            case "ROCKET_LAUNCHER":
-                // Load up the explosion prefab and instantiate it here
-                _dying = true;
-                _TurnInvisible();
-                GameObject explosion = (GameObject)Resources.Load("Prefabs/EXPLOSION");
-                GameObject explosionInstance = Instantiate(explosion, transform.position, explosion.transform.rotation);
-                StartCoroutine(_WaitForExplosionToFinish(explosionInstance, gameObject));
-                break;
-
-            case "MACHINE_GUN":
-                Destroy(gameObject);
-                break;
-
-            default:
-                Debug.Log("Unknown weapon type!");
-                break;
+            if (Vector3.Distance(_startVector, transform.position) < range && !_dying)
+            {
+                transform.position += direction * speed;
+            }
+            else
+            {
+                if (!_dying)
+                {
+                    _OnDeath();
+                }
+            }
         }
-    }
 
-    private void _TurnInvisible()
-    {
-        GetComponent<MeshRenderer>().enabled = false;
-        GetComponentInChildren<Light>().enabled = false;
-        GetComponentInChildren<ParticleSystem>().Stop();
-    }
+        private void _OnDeath()
+        {
+            switch (type)
+            {
+                case "ROCKET_LAUNCHER":
+                    // Load up the explosion prefab and instantiate it here
+                    _dying = true;
+                    _TurnInvisible();
+                    GameObject explosion = (GameObject)Resources.Load("Prefabs/EXPLOSION");
+                    GameObject explosionInstance = Instantiate(explosion, transform.position, explosion.transform.rotation);
+                    StartCoroutine(_WaitForExplosionToFinish(explosionInstance, gameObject));
+                    break;
 
-    private IEnumerator _WaitForExplosionToFinish(GameObject g, GameObject rocket)
-    {
-        yield return new WaitForSeconds(2.0f);
-        Destroy(g);
-        Destroy(rocket);
+                case "MACHINE_GUN":
+                    Destroy(gameObject);
+                    break;
+
+                case "FLAME_THROWER":
+                    StartCoroutine(_WaitNSecondsThenDie(3f));
+                    break;
+
+                default:
+                    Debug.Log("Unknown weapon type!");
+                    break;
+            }
+        }
+
+        private void _TurnInvisible()
+        {
+            _collider.enabled = false;
+            GetComponent<MeshRenderer>().enabled = false;
+            GetComponentInChildren<Light>().enabled = false;
+            GetComponentInChildren<ParticleSystem>().Stop();
+        }
+
+        private IEnumerator _WaitForExplosionToFinish(GameObject g, GameObject rocket)
+        {
+            yield return new WaitForSeconds(2.0f);
+            Destroy(g);
+            Destroy(rocket);
+        }
+
+        private IEnumerator _WaitNSecondsThenDie(float value)
+        {
+            yield return new WaitForSeconds(value);
+            Destroy(gameObject);
+        }
     }
 }

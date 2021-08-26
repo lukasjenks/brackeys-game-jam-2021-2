@@ -9,7 +9,7 @@ namespace NPC
     {
         public Creep(NavMeshAgent a) : base(a)
         {
-            MovementSpeed = 15;
+            MovementSpeed = 9;
             AngularSpeed = 140;
             Acceleration = 8;
             StoppingDistance = 15;

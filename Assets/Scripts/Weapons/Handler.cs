@@ -79,7 +79,6 @@ namespace Weapon
                     projectileScript.damage = weapon.Damage;
                     projectileScript.areaOfEffect = weapon.AreaOfEffect;
                     Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
-                    _playerControlScript.BackwardForce = weapon.BackwardForce;
                 }
                 else
                 {
@@ -126,8 +125,6 @@ namespace Weapon
                         }
                     }
                 }
-                _playerControlScript.BackwardForce = weapon.BackwardForce;
-
             }
             else if (weapon.Type == Weapon.WeaponType.AREA)
             {

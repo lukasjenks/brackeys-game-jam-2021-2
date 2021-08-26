@@ -16,6 +16,7 @@ namespace Weapon
             _areaOfEffect = 8.0f;
             _type = WeaponType.PROJECTILE;
             _projectile = "FLAMETHROWER_PROJECTILE";
+            _backwardForce = 150f;
         }
     }
 

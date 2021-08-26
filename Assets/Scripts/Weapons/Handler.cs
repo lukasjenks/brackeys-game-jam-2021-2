@@ -13,13 +13,18 @@ namespace Weapon
         new Weapon.MachineGun(),
         new Weapon.FlameThrower(),
         new Weapon.Shotgun()
-    };
+        };
 
         private Dictionary<string, bool> _weaponCoolDowns = new Dictionary<string, bool>();
         private GameObject _currentFiringParticles;
 
+        private GameObject _player;
+        private TopDownCharacterMover _playerControlScript;
+
         void Start()
         {
+            _player = GameObject.Find("Player");
+            _playerControlScript = _player.GetComponent<TopDownCharacterMover>();
             _currentWeapon = _GetRandomWeapon();
 
             //populate our cooldown dictionary for the weapons
@@ -74,6 +79,7 @@ namespace Weapon
                     projectileScript.damage = weapon.Damage;
                     projectileScript.areaOfEffect = weapon.AreaOfEffect;
                     Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                    _playerControlScript.BackwardForce = weapon.BackwardForce;
                 }
                 else
                 {
@@ -120,6 +126,8 @@ namespace Weapon
                         }
                     }
                 }
+                _playerControlScript.BackwardForce = weapon.BackwardForce;
+
             }
             else if (weapon.Type == Weapon.WeaponType.AREA)
             {

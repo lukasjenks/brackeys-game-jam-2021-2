@@ -46,6 +46,13 @@ public class TopDownCharacterMover : MonoBehaviour
     private Vector3 _velocity;
     private Vector3 _lastFramePosition;
 
+    private float _backwardForce;
+    public float BackwardForce
+    {
+        get { return _backwardForce; }
+        set { _backwardForce = value; }
+    }
+
     public Vector3 Velocity
     {
         get { return _velocity; }
@@ -71,6 +78,16 @@ public class TopDownCharacterMover : MonoBehaviour
         var targetVector = new Vector3(playerInput.inputVector.x, 0, playerInput.inputVector.y);
         var movementVector = MoveTowardTarget(targetVector);
         _velocity = _lastFramePosition - transform.position;
+
+        if (_backwardForce > 0)
+        {
+            // var destination = -transform.forward;
+            // destination.y = transform.position.y;
+            // transform.position = Vector3.MoveTowards(transform.position, destination, (_backwardForce / 2));
+            rb.AddForce(-transform.forward * _backwardForce);
+            _backwardForce = _backwardForce - _backwardForce / 2;
+
+        }
 
         if (!rotateTowardMouse)
         {

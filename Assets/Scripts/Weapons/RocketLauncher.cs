@@ -16,6 +16,7 @@ namespace Weapon
             _areaOfEffect = 5.0f;
             _type = WeaponType.PROJECTILE;
             _projectile = "ROCKET_PROJECTILE";
+            _backwardForce = 2000f;
         }
     }
 

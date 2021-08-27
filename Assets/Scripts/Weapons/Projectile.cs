@@ -102,7 +102,6 @@ namespace Weapon
         {
             _collider.enabled = false;
             GetComponent<MeshRenderer>().enabled = false;
-            GetComponentInChildren<Light>().enabled = false;
             GetComponentInChildren<ParticleSystem>().Stop();
         }
 

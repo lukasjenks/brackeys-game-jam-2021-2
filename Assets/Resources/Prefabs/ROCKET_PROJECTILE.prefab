@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 53091435702088941}
   m_Layer: 0
   m_Name: ROCKET_PROJECTILE
-  m_TagString: Untagged
+  m_TagString: Unshootable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

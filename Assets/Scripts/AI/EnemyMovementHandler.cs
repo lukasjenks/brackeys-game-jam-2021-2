@@ -70,7 +70,7 @@ public class EnemyMovementHandler : MonoBehaviour
 
                 if (distanceToPlayer > 10)
                 {
-                    Vector3 destination = _player.transform.position - (playerVelocity * 30f);
+                    Vector3 destination = _player.transform.position - (playerVelocity * (distanceToPlayer - 10));
                     enemyScript.MoveToPosition(destination);
                 }
                 else

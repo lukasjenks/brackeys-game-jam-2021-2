@@ -67,7 +67,20 @@ namespace Weapon
 
             if (weapon.Type == Weapon.WeaponType.PROJECTILE)
             {
-                if (weapon.Name != "SHOT_GUN")
+                if (weapon.Name == "FLAME_THROWER")
+                {
+                    StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
+                    GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
+                    Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
+                    projectileScript.range = weapon.Range + Random.Range(-2.5f, 2.5f);
+                    projectileScript.direction = transform.right;
+                    projectileScript.speed = weapon.ProjectileSpeed;
+                    projectileScript.type = weapon.Name;
+                    projectileScript.damage = weapon.Damage;
+                    projectileScript.areaOfEffect = weapon.AreaOfEffect;
+                    Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                }
+                else if (weapon.Name != "SHOT_GUN")
                 {
                     StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
                     GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);

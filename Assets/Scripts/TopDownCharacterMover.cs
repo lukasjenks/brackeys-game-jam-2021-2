@@ -37,8 +37,6 @@ public class TopDownCharacterMover : MonoBehaviour
 
     private bool sprinting;
 
-    private bool isGrounded;
-
     private bool isJumping; // for animations later
 
     private int elapsedFrames;
@@ -54,6 +52,13 @@ public class TopDownCharacterMover : MonoBehaviour
     private InputHandler input;
 
     private Rigidbody rb;
+    private CharacterController _cc;
+    public GameObject helper;
+
+    [SerializeField]
+    private float _gravity = -9.8f;
+
+    private Vector3 _jumpVelocity;
 
     private float moveSpeed; // calculated from baseSpeed and sprintSpeed
 
@@ -61,25 +66,49 @@ public class TopDownCharacterMover : MonoBehaviour
     {
         playerInput = GetComponent<InputHandler>();
         rb = GetComponent<Rigidbody>();
-        // initialize moveSpeed to base speed on first frame
+        _cc = GetComponent<CharacterController>();
         moveSpeed = baseSpeed;
+        _jumpVelocity = new Vector3();
     }
 
     // Update is called once per frame
     void Update()
     {
-        var targetVector = new Vector3(playerInput.inputVector.x, 0, playerInput.inputVector.y);
-        var movementVector = MoveTowardTarget(targetVector);
-        _velocity = _lastFramePosition - transform.position;
+        if (_cc.isGrounded && playerInput.spacePressed)
+        {
+            _jumpVelocity.y = jumpForce;
+            isJumping = true;
+        }
+        else if (!_cc.isGrounded && isJumping)
+        {
+            _jumpVelocity.y += _gravity * Time.deltaTime;
+        }
+        else
+        {
+            _jumpVelocity.y = _gravity;
+        }
 
-        if (!rotateTowardMouse)
-        {
-            RotateTowardMovementVector(movementVector);
-        }
-        if (rotateTowardMouse)
-        {
-            RotateFromMouseVector();
-        }
+
+        // else
+        // {
+        //     _jumpVelocity.y += _gravity * Time.deltaTime;
+        // }
+
+        var targetVector = new Vector3(playerInput.inputVector.x, 0, playerInput.inputVector.y);
+        _velocity = _cc.velocity;
+
+        float deltaX = Input.GetAxis("Horizontal") * moveSpeed;
+        float deltaZ = Input.GetAxis("Vertical") * moveSpeed;
+
+        Vector3 movement = new Vector3();
+        movement += (deltaX * new Vector3(1, 0, 0));
+        movement += (deltaZ * new Vector3(0, 0, 1));
+        movement.y = _jumpVelocity.y;
+        movement = Vector3.ClampMagnitude(movement, moveSpeed);
+        movement *= Time.deltaTime;
+
+        _cc.Move(movement);
+        RotateFromMouseVector();
 
         if (playerInput.shiftPressed)
         {
@@ -94,65 +123,18 @@ public class TopDownCharacterMover : MonoBehaviour
                 sprinting = true;
             }
         }
-
-        CheckGroundStatus();
-        if (isGrounded)
-        {
-            if (playerInput.spacePressed)
-            {
-                // jump
-                rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-                isGrounded = false;
-                isJumping = true;
-                groundCheckDist = 0.1f; // just before hitting the ground again
-            }
-        }
-
-        _lastFramePosition = transform.position;
     }
 
     private void RotateFromMouseVector()
     {
         Ray ray = playerCamera.ScreenPointToRay(playerInput.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance: 300f))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
         {
             var target = hitInfo.point;
             target.y = transform.position.y;
+            helper.transform.position = target;
             transform.LookAt(target);
-        }
-    }
-
-    private Vector3 MoveTowardTarget(Vector3 targetVector)
-    {
-        targetVector = Quaternion.Euler(0, playerCamera.gameObject.transform.rotation.eulerAngles.y, 0) * targetVector;
-        var targetPosition = transform.position + targetVector;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, (moveSpeed / 10));
-        return targetVector;
-    }
-
-    private void RotateTowardMovementVector(Vector3 movementDirection)
-    {
-        if (movementDirection.magnitude == 0)
-        {
-            return;
-        }
-        var rotation = Quaternion.LookRotation(movementDirection);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed);
-    }
-
-    private void CheckGroundStatus()
-    {
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hitInfo, groundCheckDist))
-        {
-            isGrounded = true;
-            isJumping = false;
-        }
-        else
-        {
-            isGrounded = false;
-            isJumping = true;
         }
     }
 }

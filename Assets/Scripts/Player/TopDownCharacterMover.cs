@@ -80,8 +80,6 @@ namespace Player
         {
             if (isActive)
             {
-
-
                 if (_cc.isGrounded && playerInput.spacePressed)
                 {
                     _jumpVelocity.y = jumpForce;
@@ -95,12 +93,6 @@ namespace Player
                 {
                     _jumpVelocity.y = _gravity;
                 }
-
-
-                // else
-                // {
-                //     _jumpVelocity.y += _gravity * Time.deltaTime;
-                // }
 
                 var targetVector = new Vector3(playerInput.inputVector.x, 0, playerInput.inputVector.y);
                 _velocity = _cc.velocity;

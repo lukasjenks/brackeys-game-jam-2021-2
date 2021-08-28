@@ -19,7 +19,7 @@ namespace Weapon
         private bool _dying;
 
         private const int _DAMAGEABLE_LAYER = 6;
-        private const int _TERRAIN_LAYER = 6;
+        private const int _TERRAIN_LAYER = 9;
 
         private const int _DAMAGE_LAYER = 1 << _TERRAIN_LAYER | 1 << _DAMAGEABLE_LAYER;
 
@@ -60,6 +60,13 @@ namespace Weapon
                         _creeperOnCooldown = true;
                         Player.Stats stats = hitCollider.gameObject.GetComponent<Player.Stats>() != null ? hitCollider.gameObject.GetComponent<Player.Stats>() : hitCollider.gameObject.GetComponentInParent<Player.Stats>();
                         stats.GetHit(Player.HitType.CREEPER);
+                        if (!_dying)
+                        {
+                            _OnDeath();
+                        }
+                    }
+                    else if (hitCollider.gameObject.tag == "Terrain")
+                    {
                         if (!_dying)
                         {
                             _OnDeath();

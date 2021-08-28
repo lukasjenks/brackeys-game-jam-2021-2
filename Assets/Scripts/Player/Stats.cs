@@ -34,9 +34,6 @@ namespace Player
 
         void Update()
         {
-
-            // Debug.Log(_canvasG.alpha);
-            // Debug.Log(_numHits);
             if (_IsDead() && !_setDead)
             {
                 _setDead = true;

@@ -22,7 +22,7 @@ namespace NPC
         {
             for (int i = 0; i < gibletTypes.Count; i++)
             {
-                for (int j = 0; j < Random.Range(2, 3); j++)
+                for (int j = 0; j < Random.Range(2, 8); j++)
                 {
                     // spawn the giblets here!
                     GameObject giblet = Instantiate(gibletTypes[i], position, _RandomRotation());

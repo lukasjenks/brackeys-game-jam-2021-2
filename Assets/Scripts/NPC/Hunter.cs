@@ -5,14 +5,14 @@ using UnityEngine.AI;
 
 namespace NPC
 {
-    public class Chaser : NPC.Enemy
+    public class Hunter : NPC.Enemy
     {
-        public Chaser(NavMeshAgent a) : base(a)
+        public Hunter(NavMeshAgent a) : base(a)
         {
-            MovementSpeed = 16;
+            MovementSpeed = 65;
             AngularSpeed = 200;
-            Acceleration = 60;
-            StoppingDistance = 1;
+            Acceleration = 200;
+            StoppingDistance = 2;
             Health = 250f;
         }
     }

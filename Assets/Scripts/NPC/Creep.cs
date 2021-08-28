@@ -14,6 +14,7 @@ namespace NPC
             Acceleration = 8;
             StoppingDistance = 15;
             Health = 100f;
+            Projectile = "CREEPER_PROJECTILE";
         }
     }
 }

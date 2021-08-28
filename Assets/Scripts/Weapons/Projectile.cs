@@ -88,12 +88,17 @@ namespace Weapon
                     Destroy(gameObject);
                     break;
 
+                case "CREEPER":
+                    Destroy(gameObject);
+                    // SET CUSTOM BLUE EXPLOSION HERE
+                    break;
+
                 case "FLAME_THROWER":
                     StartCoroutine(_WaitNSecondsThenDie(3f));
                     break;
 
                 default:
-                    Debug.Log("Unknown weapon type!");
+                    Debug.Log("Unknown weapon type of " + type);
                     break;
             }
         }

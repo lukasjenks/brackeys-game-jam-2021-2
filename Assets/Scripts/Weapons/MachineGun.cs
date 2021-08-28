@@ -16,6 +16,7 @@ namespace Weapon
             _projectileSpeed = 2.0f;
             _projectile = "MACHINE_GUN_PROJECTILE";
             _areaOfEffect = 1;
+            _backwardForce = 150f;
         }
     }
 }

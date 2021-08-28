@@ -9,9 +9,9 @@ namespace NPC
     {
         public Chaser(NavMeshAgent a) : base(a)
         {
-            MovementSpeed = 4;
-            AngularSpeed = 140;
-            Acceleration = 8;
+            MovementSpeed = 16;
+            AngularSpeed = 200;
+            Acceleration = 16;
             StoppingDistance = 1;
             Health = 250f;
         }

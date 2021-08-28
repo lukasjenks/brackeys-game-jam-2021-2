@@ -11,14 +11,20 @@ namespace Weapon
         private List<Weapon.Entity> _weapons = new List<Weapon.Entity> {
         new Weapon.RocketLauncher(),
         new Weapon.MachineGun(),
-        new Weapon.FlameThrower()
-    };
+        new Weapon.FlameThrower(),
+        new Weapon.Shotgun()
+        };
 
         private Dictionary<string, bool> _weaponCoolDowns = new Dictionary<string, bool>();
         private GameObject _currentFiringParticles;
 
+        private GameObject _player;
+        private TopDownCharacterMover _playerControlScript;
+
         void Start()
         {
+            _player = GameObject.Find("Player");
+            _playerControlScript = _player.GetComponent<TopDownCharacterMover>();
             _currentWeapon = _GetRandomWeapon();
 
             //populate our cooldown dictionary for the weapons
@@ -61,17 +67,77 @@ namespace Weapon
 
             if (weapon.Type == Weapon.WeaponType.PROJECTILE)
             {
-                StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
-                GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
-
-                Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
-                projectileScript.range = weapon.Range;
-                projectileScript.direction = transform.right;
-                projectileScript.speed = weapon.ProjectileSpeed;
-                projectileScript.type = weapon.Name;
-                projectileScript.damage = weapon.Damage;
-                projectileScript.areaOfEffect = weapon.AreaOfEffect;
-                Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                if (weapon.Name == "FLAME_THROWER")
+                {
+                    StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
+                    GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
+                    Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
+                    projectileScript.range = weapon.Range + Random.Range(-2.5f, 2.5f);
+                    projectileScript.direction = transform.right;
+                    projectileScript.speed = weapon.ProjectileSpeed;
+                    projectileScript.type = weapon.Name;
+                    projectileScript.damage = weapon.Damage;
+                    projectileScript.areaOfEffect = weapon.AreaOfEffect;
+                    Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                }
+                else if (weapon.Name != "SHOT_GUN")
+                {
+                    StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
+                    GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
+                    Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
+                    projectileScript.range = weapon.Range;
+                    projectileScript.direction = transform.right;
+                    projectileScript.speed = weapon.ProjectileSpeed;
+                    projectileScript.type = weapon.Name;
+                    projectileScript.damage = weapon.Damage;
+                    projectileScript.areaOfEffect = weapon.AreaOfEffect;
+                    Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                }
+                else
+                {
+                    // we spawn 3 here at angles
+                    StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
+                    // instantiate our forward bullet
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (i == 0)
+                        {
+                            GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
+                            Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
+                            projectileScript.range = weapon.Range;
+                            projectileScript.direction = transform.right;
+                            projectileScript.speed = weapon.ProjectileSpeed;
+                            projectileScript.type = weapon.Name;
+                            projectileScript.damage = weapon.Damage;
+                            projectileScript.areaOfEffect = weapon.AreaOfEffect;
+                            Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                        }
+                        else if (i % 2 == 0)
+                        { //even
+                            GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
+                            Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
+                            projectileScript.range = weapon.Range;
+                            projectileScript.direction = transform.right + transform.forward;
+                            projectileScript.speed = weapon.ProjectileSpeed;
+                            projectileScript.type = weapon.Name;
+                            projectileScript.damage = weapon.Damage;
+                            projectileScript.areaOfEffect = weapon.AreaOfEffect;
+                            Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation * Quaternion.Euler(0, 0, 45));
+                        }
+                        else
+                        {  //odd
+                            GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
+                            Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
+                            projectileScript.range = weapon.Range;
+                            projectileScript.direction = transform.right - transform.forward;
+                            projectileScript.speed = weapon.ProjectileSpeed;
+                            projectileScript.type = weapon.Name;
+                            projectileScript.damage = weapon.Damage;
+                            projectileScript.areaOfEffect = weapon.AreaOfEffect;
+                            Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation * Quaternion.Euler(0, 0, -45));
+                        }
+                    }
+                }
             }
             else if (weapon.Type == Weapon.WeaponType.AREA)
             {

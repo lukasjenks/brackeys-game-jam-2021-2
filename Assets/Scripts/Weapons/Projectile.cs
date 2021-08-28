@@ -14,6 +14,7 @@ namespace Weapon
         public float areaOfEffect;
         private Vector3 _startVector;
         private Collider _collider;
+        private NPC.Gibber _gibber;
         private bool _dying;
 
         private const int _DAMAGE_LAYER = 1 << 6;
@@ -23,29 +24,34 @@ namespace Weapon
         {
             _startVector = transform.position;
             _collider = GetComponent<Collider>();
+            _gibber = GameObject.Find("Gibber").GetComponent<NPC.Gibber>();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            // check if any nearby enemies
-            Collider[] hitColliders = Physics.OverlapSphere(transform.position, areaOfEffect, _DAMAGE_LAYER);
-
-            foreach (var hitCollider in hitColliders)
+            if (other.gameObject.tag != "Unshootable")
             {
-                var distance = Vector3.Distance(transform.position, hitCollider.gameObject.transform.position);
-                if (hitCollider.gameObject.tag == "Enemy" && distance <= areaOfEffect)
+                // check if any nearby enemies
+                Collider[] hitColliders = Physics.OverlapSphere(transform.position, areaOfEffect, _DAMAGE_LAYER);
+
+                foreach (var hitCollider in hitColliders)
                 {
-                    EnemyMovementHandler tempEnemyHandler = hitCollider.gameObject.GetComponent<EnemyMovementHandler>();
-                    if (tempEnemyHandler.enemyScript.TakeDamage(damage / distance))
+                    var distance = Vector3.Distance(transform.position, hitCollider.gameObject.transform.position);
+                    if (hitCollider.gameObject.tag == "Enemy" && distance <= areaOfEffect)
                     {
-                        NPC.Manager.npcDict.Remove(hitCollider.gameObject.GetInstanceID().ToString());
-                        Destroy(hitCollider.gameObject);
+                        EnemyMovementHandler tempEnemyHandler = hitCollider.gameObject.GetComponent<EnemyMovementHandler>();
+                        if (tempEnemyHandler.enemyScript.TakeDamage(damage / distance))
+                        {
+                            _gibber.Activate(transform.position);
+                            NPC.Manager.npcDict.Remove(hitCollider.gameObject.GetInstanceID().ToString());
+                            Destroy(hitCollider.gameObject);
+                        }
                     }
                 }
-            }
-            if (!_dying)
-            {
-                _OnDeath();
+                if (!_dying)
+                {
+                    _OnDeath();
+                }
             }
         }
 
@@ -78,7 +84,7 @@ namespace Weapon
                     StartCoroutine(_WaitForExplosionToFinish(explosionInstance, gameObject));
                     break;
 
-                case "MACHINE_GUN":
+                case "MACHINE_GUN" or "SHOT_GUN":
                     Destroy(gameObject);
                     break;
 

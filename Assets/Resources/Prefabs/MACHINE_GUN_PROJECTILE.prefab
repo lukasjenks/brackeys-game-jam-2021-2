@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -8021355758082483193}
   m_Layer: 0
   m_Name: MACHINE_GUN_PROJECTILE
-  m_TagString: Untagged
+  m_TagString: Unshootable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -178,3 +178,5 @@ MonoBehaviour:
   speed: 0
   direction: {x: 0, y: 0, z: 0}
   type: 
+  damage: 0
+  areaOfEffect: 0

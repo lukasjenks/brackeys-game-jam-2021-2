@@ -55,8 +55,8 @@ namespace Player
 
         private Rigidbody rb;
         private CharacterController _cc;
-        public GameObject helper;
 
+        public bool isActive = true;
         [SerializeField]
         private float _gravity = -9.8f;
 
@@ -66,8 +66,10 @@ namespace Player
 
         private void Awake()
         {
+            Time.timeScale = 1;
             playerInput = GetComponent<InputHandler>();
             rb = GetComponent<Rigidbody>();
+            rb.velocity = new Vector3();
             _cc = GetComponent<CharacterController>();
             moveSpeed = baseSpeed;
             _jumpVelocity = new Vector3();
@@ -76,53 +78,59 @@ namespace Player
         // Update is called once per frame
         void Update()
         {
-            if (_cc.isGrounded && playerInput.spacePressed)
+            if (isActive)
             {
-                _jumpVelocity.y = jumpForce;
-                isJumping = true;
-            }
-            else if (!_cc.isGrounded && isJumping)
-            {
-                _jumpVelocity.y += _gravity * Time.deltaTime;
-            }
-            else
-            {
-                _jumpVelocity.y = _gravity;
-            }
 
 
-            // else
-            // {
-            //     _jumpVelocity.y += _gravity * Time.deltaTime;
-            // }
-
-            var targetVector = new Vector3(playerInput.inputVector.x, 0, playerInput.inputVector.y);
-            _velocity = _cc.velocity;
-
-            float deltaX = Input.GetAxis("Horizontal") * moveSpeed;
-            float deltaZ = Input.GetAxis("Vertical") * moveSpeed;
-
-            Vector3 movement = new Vector3();
-            movement += (deltaX * new Vector3(1, 0, 0));
-            movement += (deltaZ * new Vector3(0, 0, 1));
-            movement.y = _jumpVelocity.y;
-            movement = Vector3.ClampMagnitude(movement, moveSpeed);
-            movement *= Time.deltaTime;
-
-            _cc.Move(movement);
-            RotateFromMouseVector();
-
-            if (playerInput.shiftPressed)
-            {
-                if (sprinting)
+                if (_cc.isGrounded && playerInput.spacePressed)
                 {
-                    moveSpeed = baseSpeed;
-                    sprinting = false;
+                    _jumpVelocity.y = jumpForce;
+                    isJumping = true;
+                }
+                else if (!_cc.isGrounded && isJumping)
+                {
+                    _jumpVelocity.y += _gravity * Time.deltaTime;
                 }
                 else
                 {
-                    moveSpeed = sprintSpeed;
-                    sprinting = true;
+                    _jumpVelocity.y = _gravity;
+                }
+
+
+                // else
+                // {
+                //     _jumpVelocity.y += _gravity * Time.deltaTime;
+                // }
+
+                var targetVector = new Vector3(playerInput.inputVector.x, 0, playerInput.inputVector.y);
+                _velocity = _cc.velocity;
+
+                float deltaX = Input.GetAxis("Horizontal") * moveSpeed;
+                float deltaZ = Input.GetAxis("Vertical") * moveSpeed;
+
+                Vector3 movement = new Vector3();
+                movement += (deltaX * new Vector3(1, 0, 0));
+                movement += (deltaZ * new Vector3(0, 0, 1));
+                movement.y = _jumpVelocity.y;
+
+                movement = Vector3.ClampMagnitude(movement, moveSpeed);
+                movement *= Time.deltaTime;
+
+                _cc.Move(movement);
+                RotateFromMouseVector();
+
+                if (playerInput.shiftPressed)
+                {
+                    if (sprinting)
+                    {
+                        moveSpeed = baseSpeed;
+                        sprinting = false;
+                    }
+                    else
+                    {
+                        moveSpeed = sprintSpeed;
+                        sprinting = true;
+                    }
                 }
             }
         }
@@ -135,8 +143,10 @@ namespace Player
             {
                 var target = hitInfo.point;
                 target.y = transform.position.y;
-                helper.transform.position = target;
-                transform.LookAt(target);
+
+                var qTo = Quaternion.LookRotation(target - transform.position);
+                qTo = Quaternion.Slerp(transform.rotation, qTo, 15f * Time.deltaTime);
+                rb.MoveRotation(qTo);
             }
         }
     }

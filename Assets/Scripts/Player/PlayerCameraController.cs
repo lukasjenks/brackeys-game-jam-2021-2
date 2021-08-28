@@ -6,25 +6,17 @@ namespace Player
 {
     public class PlayerCameraController : MonoBehaviour
     {
-        public GameObject player;
-
-        [SerializeField]
-        private float xOffset;
-        [SerializeField]
-        private float yOffset;
-        [SerializeField]
-        private float zOffset;
-
-        // Update is called once per frame
-        void Update()
+        private GameObject _player;
+        private Vector3 _offset;
+        void Awake()
         {
-            Vector3 playerPos = player.transform.position;
-            playerPos.x = playerPos.x - xOffset;
-            playerPos.y = playerPos.y - yOffset;
-            playerPos.z = playerPos.z - zOffset;
-            // adjust camera pos with calc'ed vals
-            //transform.position = playerPos;
-            transform.position = Vector3.MoveTowards(transform.position, playerPos, 1);
+            _player = GameObject.Find("Player");
+            _offset = transform.position - _player.transform.position;
+        }
+
+        void LateUpdate() // this is needed or else unity ceases to act like a normal game engine
+        {
+            transform.position = _player.transform.position + _offset;
         }
     }
 

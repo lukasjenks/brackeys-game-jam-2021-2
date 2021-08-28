@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 
 // If I'm being honest, I have no idea how this works, but it does - Zach
 
@@ -20,10 +20,15 @@ namespace Player
         private float _numHits = 0f;
         private float _rechargeTime = 5.0f;
         private bool _recentTakenDamage = false;
+        private bool _setDead = false;
         private List<string> _recentDamageIndicators = new List<string>();
         private CanvasGroup _canvasG;
-        void Start()
+        private TextPopper _textPopper;
+        private GameObject _player;
+        void Awake()
         {
+            _player = GameObject.Find("Player");
+            _textPopper = GameObject.Find("TEXT_POPPER").GetComponent<TextPopper>();
             _canvasG = GetComponentInChildren<CanvasGroup>();
         }
 
@@ -32,10 +37,14 @@ namespace Player
 
             // Debug.Log(_canvasG.alpha);
             // Debug.Log(_numHits);
-            // if (_IsDead())
-            // {
-            //     Debug.Log("IM DEAD");
-            // }
+            if (_IsDead() && !_setDead)
+            {
+                _setDead = true;
+                _player.GetComponent<TopDownCharacterMover>().isActive = false;
+                _player.GetComponentInChildren<Weapon.Handler>().isActive = false;
+                _textPopper.ShowFlickerText("YOU DIED");
+                StartCoroutine(_ReloadScene(3.0f));
+            }
 
             if (_numHits > 0)
             {
@@ -53,7 +62,7 @@ namespace Player
 
         private bool _IsDead()
         {
-            return _numHits >= 8 ? true : false;
+            return _numHits >= 10 ? true : false;
         }
 
         public void GetHit(HitType t)
@@ -122,6 +131,13 @@ namespace Player
                 _numHits = 0;
                 yield return _RemoveDamageCanvas(0);
             }
+        }
+
+        private IEnumerator _ReloadScene(float n)
+        {
+            yield return new WaitForSeconds(n);
+            // Application.LoadLevel(Application.loadedLevel);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }
     }
 }

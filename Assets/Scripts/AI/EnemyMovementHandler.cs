@@ -149,7 +149,7 @@ public class EnemyMovementHandler : MonoBehaviour
                             _onCoolDown = true;
                             bool hitPlayer = false;
                             // check for a collision here with the player
-                            Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10f, _DAMAGE_LAYER);
+                            Collider[] hitColliders = Physics.OverlapSphere(transform.position, 5f, _DAMAGE_LAYER);
                             foreach (var hitCollider in hitColliders)
                             {
                                 if (hitCollider.gameObject.tag == "Player")

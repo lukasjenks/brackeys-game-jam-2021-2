@@ -21,6 +21,8 @@ namespace Weapon
         private GameObject _player;
         private Player.TopDownCharacterMover _playerControlScript;
 
+        public bool isActive = true;
+
         void Start()
         {
             _player = GameObject.Find("Player");
@@ -37,19 +39,22 @@ namespace Weapon
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetButton("Fire1") && !_weaponCoolDowns[_weapons[_currentWeapon].Name])
+            if (isActive)
             {
-                _HandleFire();
-            }
-
-            if (Input.GetButtonUp("Fire1")) // check if they let go of fire, if so we reset the cooldown and switch weapons
-            {
-                if (_weapons[_currentWeapon].Type == WeaponType.PRECISE)
+                if (Input.GetButton("Fire1") && !_weaponCoolDowns[_weapons[_currentWeapon].Name])
                 {
-                    Destroy(_currentFiringParticles);
-                    _currentFiringParticles = null;
+                    _HandleFire();
                 }
-                _currentWeapon = _GetRandomWeapon();
+
+                if (Input.GetButtonUp("Fire1")) // check if they let go of fire, if so we reset the cooldown and switch weapons
+                {
+                    if (_weapons[_currentWeapon].Type == WeaponType.PRECISE)
+                    {
+                        Destroy(_currentFiringParticles);
+                        _currentFiringParticles = null;
+                    }
+                    _currentWeapon = _GetRandomWeapon();
+                }
             }
         }
 

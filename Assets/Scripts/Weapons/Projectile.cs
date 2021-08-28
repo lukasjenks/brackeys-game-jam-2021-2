@@ -15,6 +15,7 @@ namespace Weapon
         private Vector3 _startVector;
         private Collider _collider;
         private NPC.Gibber _gibber;
+        private bool _creeperOnCooldown = false;
         private bool _dying;
 
         private const int _DAMAGEABLE_LAYER = 6;
@@ -54,8 +55,9 @@ namespace Weapon
                             _OnDeath();
                         }
                     }
-                    else if (type == "CREEPER" && hitCollider.gameObject.tag == "Player")
+                    else if (type == "CREEPER" && hitCollider.gameObject.tag == "Player" && !_creeperOnCooldown)
                     {
+                        _creeperOnCooldown = true;
                         Player.Stats stats = hitCollider.gameObject.GetComponent<Player.Stats>() != null ? hitCollider.gameObject.GetComponent<Player.Stats>() : hitCollider.gameObject.GetComponentInParent<Player.Stats>();
                         stats.GetHit(Player.HitType.CREEPER);
                         if (!_dying)
@@ -133,6 +135,7 @@ namespace Weapon
         {
             yield return new WaitForSeconds(value);
             Destroy(gameObject);
+            _creeperOnCooldown = false;
         }
     }
 }

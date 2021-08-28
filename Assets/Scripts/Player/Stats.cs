@@ -20,10 +20,10 @@ namespace Player
         void Update()
         {
             // Debug.Log(_numHits);
-            if (_IsDead())
-            {
-                Debug.Log("IM DEAD");
-            }
+            // if (_IsDead())
+            // {
+            //     Debug.Log("IM DEAD");
+            // }
         }
 
         private bool _IsDead()
@@ -37,12 +37,12 @@ namespace Player
             {
                 case HitType.CHASER:
                     _numHits += 0.5f;
-                    Debug.Log("HIT BY CHASER");
+                    // Debug.Log("HIT BY CHASER");
                     StartCoroutine(_GiveLifeBack(0.5f));
                     break;
                 case HitType.CREEPER:
                     _numHits += 1.0f;
-                    Debug.Log("HIT BY CREEPER");
+                    // Debug.Log("HIT BY CREEPER");
                     StartCoroutine(_GiveLifeBack(1.0f));
                     break;
                 case HitType.HUNTER:

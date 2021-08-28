@@ -76,7 +76,7 @@ public class EnemyMovementHandler : MonoBehaviour
             if (collision.collider.gameObject.tag == "Player" && !_onCoolDown)
             {
                 _onCoolDown = true;
-                Player.Stats stats = collision.collider.gameObject.GetComponent<Player.Stats>();
+                Player.Stats stats = collision.collider.gameObject.GetComponent<Player.Stats>() != null ? collision.collider.gameObject.GetComponent<Player.Stats>() : collision.collider.gameObject.GetComponentInParent<Player.Stats>();
                 stats.GetHit(Player.HitType.CHASER);
                 _agent.velocity = collision.collider.gameObject.transform.position - transform.position;
                 _tempSpeed = enemyScript.MovementSpeed;
@@ -109,7 +109,7 @@ public class EnemyMovementHandler : MonoBehaviour
                         projectileScript.speed = 0.05f;
                         projectileScript.type = "CREEPER";
                         projectileScript.damage = 500f;
-                        projectileScript.areaOfEffect = 5f;
+                        projectileScript.areaOfEffect = 2f;
                         Instantiate(
                             projectile,
                             transform.position + Vector3.Scale(transform.forward, new Vector3(2, 2, 2)),
@@ -184,21 +184,28 @@ public class EnemyMovementHandler : MonoBehaviour
         // we should generate another vector in the middle here
         List<Vector3> pathVectors = new List<Vector3>();
 
-        for (int i = 0; i < path.corners.Length; i++)
+        if (path.corners.Length > 0)
         {
-            pathVectors.Add(path.corners[i]);
+            for (int i = 0; i < path.corners.Length; i++)
+            {
+                pathVectors.Add(path.corners[i]);
+            }
+
+            Vector3 temp = new Vector3(
+                path.corners[path.corners.Length - 1].x,
+                path.corners[path.corners.Length - 1].y,
+                path.corners[path.corners.Length - 1].z
+            );
+
+            pathVectors.Insert((int)path.corners.Length - 1, Vector3.Scale(temp, new Vector3(0.5f, 0.5f, 0.5f)));
+
+            _hunterPathCreated = true;
+            _hunterPath = pathVectors;
         }
-
-        Vector3 temp = new Vector3(
-            path.corners[path.corners.Length - 1].x,
-            path.corners[path.corners.Length - 1].y,
-            path.corners[path.corners.Length - 1].z
-        );
-
-        pathVectors.Insert((int)path.corners.Length - 1, Vector3.Scale(temp, new Vector3(0.5f, 0.5f, 0.5f)));
-
-        _hunterPathCreated = true;
-        _hunterPath = pathVectors;
+        else
+        {
+            pathVectors.Add(_player.transform.position);
+        }
     }
 
     private IEnumerator _WaitThenCalculatePath(float n)

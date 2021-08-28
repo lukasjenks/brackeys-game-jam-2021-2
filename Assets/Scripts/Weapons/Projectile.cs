@@ -17,7 +17,7 @@ namespace Weapon
         private NPC.Gibber _gibber;
         private bool _dying;
 
-        private const int _DAMAGE_LAYER = 1 << 6;
+        private const int _DAMAGE_LAYER = 1 << 6 | 1 << 9;
 
 
         void Start()

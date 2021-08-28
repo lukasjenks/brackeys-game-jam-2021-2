@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4466080450022167887}
   - component: {fileID: 8724012430571296666}
   - component: {fileID: 2213440824139360119}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Giblet
   m_TagString: Unshootable
   m_Icon: {fileID: 0}

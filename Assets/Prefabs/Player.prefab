@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 4498816911105158388}
   - component: {fileID: 4498816911105158387}
   - component: {fileID: 4498816911105158386}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LeftArm
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,9 +110,9 @@ GameObject:
   - component: {fileID: 4498816911887097285}
   - component: {fileID: 4498816911887097284}
   - component: {fileID: 4498816911887097283}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RightArm
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -376,9 +376,9 @@ GameObject:
   - component: {fileID: 4498816912674170515}
   - component: {fileID: 4498816912674170514}
   - component: {fileID: 4498816912674170513}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Face
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

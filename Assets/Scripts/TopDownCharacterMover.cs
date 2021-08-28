@@ -62,6 +62,8 @@ public class TopDownCharacterMover : MonoBehaviour
 
     private float moveSpeed; // calculated from baseSpeed and sprintSpeed
 
+    private AudioManager audioManager;
+
     private void Awake()
     {
         playerInput = GetComponent<InputHandler>();
@@ -69,6 +71,8 @@ public class TopDownCharacterMover : MonoBehaviour
         _cc = GetComponent<CharacterController>();
         moveSpeed = baseSpeed;
         _jumpVelocity = new Vector3();
+
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     // Update is called once per frame
@@ -106,6 +110,16 @@ public class TopDownCharacterMover : MonoBehaviour
         movement.y = _jumpVelocity.y;
         movement = Vector3.ClampMagnitude(movement, moveSpeed);
         movement *= Time.deltaTime;
+
+        if (deltaX != 0 || deltaZ != 0) {
+            if (!audioManager.IsPlaying("Walking")) {
+                Debug.Log("Playing Walking Sound");
+                audioManager.Play("Walking");
+            }
+        } else {
+            Debug.Log("Paused Walking Sound");
+            audioManager.Pause("Walking");
+        }
 
         _cc.Move(movement);
         RotateFromMouseVector();

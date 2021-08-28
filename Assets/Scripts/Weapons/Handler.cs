@@ -20,6 +20,11 @@ namespace Weapon
 
         private GameObject _player;
         private TopDownCharacterMover _playerControlScript;
+        private AudioManager audioManager;
+
+        void Awake() {
+            audioManager = FindObjectOfType<AudioManager>();
+        }
 
         void Start()
         {
@@ -44,6 +49,7 @@ namespace Weapon
 
             if (Input.GetButtonUp("Fire1")) // check if they let go of fire, if so we reset the cooldown and switch weapons
             {
+                audioManager.StopGroup("Weapon Sounds");
                 if (_weapons[_currentWeapon].Type == WeaponType.PRECISE)
                 {
                     Destroy(_currentFiringParticles);
@@ -69,6 +75,8 @@ namespace Weapon
             {
                 if (weapon.Name == "FLAME_THROWER")
                 {
+                    if (!audioManager.IsPlaying("Flamethrower Loop"))
+                        audioManager.Play("Flamethrower Loop");
                     StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
                     GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
                     Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
@@ -82,6 +90,12 @@ namespace Weapon
                 }
                 else if (weapon.Name != "SHOT_GUN")
                 {
+                    if (weapon.Name == "MACHINE_GUN" && !audioManager.IsPlaying("Short Gunshot Loop")) {
+                        audioManager.Play("Short Gunshot Loop");
+                    }
+                    else if (weapon.Name == "ROCKET_LAUNCHER") {
+                        audioManager.Play("Short Rocket Launch");
+                    }
                     StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
                     GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
                     Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
@@ -95,6 +109,7 @@ namespace Weapon
                 }
                 else
                 {
+                    audioManager.Play("Shotgun");
                     // we spawn 3 here at angles
                     StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
                     // instantiate our forward bullet

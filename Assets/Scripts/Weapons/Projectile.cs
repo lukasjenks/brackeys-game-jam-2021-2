@@ -19,6 +19,11 @@ namespace Weapon
 
         private const int _DAMAGE_LAYER = 1 << 6;
 
+        private AudioManager audioManager;
+
+        void Awake() {
+            audioManager = FindObjectOfType<AudioManager>();
+        }
 
         void Start()
         {
@@ -81,6 +86,7 @@ namespace Weapon
                     _TurnInvisible();
                     GameObject explosion = (GameObject)Resources.Load("Prefabs/EXPLOSION");
                     GameObject explosionInstance = Instantiate(explosion, transform.position, explosion.transform.rotation);
+                    audioManager.Play("Rocket Explosion");
                     StartCoroutine(_WaitForExplosionToFinish(explosionInstance, gameObject));
                     break;
 

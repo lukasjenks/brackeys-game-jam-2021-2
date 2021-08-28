@@ -7,6 +7,13 @@ namespace NPC
 {
     public class Enemy : AI.Entity
     {
+        private string _projectile;
+
+        public string Projectile
+        {
+            get { return _projectile; }
+            set { _projectile = value; }
+        }
         private float _health;
         public Enemy(NavMeshAgent a)
         {

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 19900000}
   - component: {fileID: 1607665711461479056}
   - component: {fileID: 342724617461549383}
-  - component: {fileID: 2726853965578554966}
   m_Layer: 0
   m_Name: FLAMETHROWER_PROJECTILE
   m_TagString: Unshootable
@@ -4753,19 +4752,3 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.56599104
   m_Center: {x: 0, y: 0, z: 0}
---- !u!208 &2726853965578554966
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 35.510002, y: 35.510002, z: 0.00001}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5

@@ -9,7 +9,7 @@ namespace Weapon
         public MachineGun()
         {
             _name = "MACHINE_GUN";
-            _damage = 25.0f;
+            _damage = 50.0f;
             _rateOfFire = 5000.0f;
             _range = 50.0f;
             _type = WeaponType.PROJECTILE;

@@ -90,6 +90,16 @@ public class EnemyMovementHandler : MonoBehaviour
                 StartCoroutine(_ChangeSpeedAfterNSeconds(3.5f, _tempSpeed));
             }
         }
+        else if (type == EnemyType.HUNTER)
+        {
+            if (collision.collider.gameObject.tag == "Player" && !_onCoolDown)
+            {
+                _onCoolDown = true;
+                Player.Stats stats = collision.collider.gameObject.GetComponent<Player.Stats>() != null ? collision.collider.gameObject.GetComponent<Player.Stats>() : collision.collider.gameObject.GetComponentInParent<Player.Stats>();
+                stats.GetHit(Player.HitType.HUNTER);
+                StartCoroutine(_HunterResetCoolDown(3.5f));
+            }
+        }
     }
     void Update()
     {
@@ -254,5 +264,11 @@ public class EnemyMovementHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(_creepCoolDown);
         _creepOnCoolDown = false;
+    }
+
+    private IEnumerator _HunterResetCoolDown(float n)
+    {
+        yield return new WaitForSeconds(_creepCoolDown);
+        _onCoolDown = false;
     }
 }

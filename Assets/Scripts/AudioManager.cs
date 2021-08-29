@@ -89,6 +89,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void SetOrigin(string soundName, GameObject o)
+    {
+        Sound s = GetSound(soundName);
+        s.origin = o;
+    }
+
     public void StartGroup(string groupName)
     {
         foreach (Sound s in sounds)

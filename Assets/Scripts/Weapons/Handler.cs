@@ -22,6 +22,8 @@ namespace Weapon
         private GameObject _player;
         private Player.TopDownCharacterMover _playerControlScript;
 
+        private Transform _barrel;
+
         public bool isActive = true;
         private AudioManager audioManager;
 
@@ -34,6 +36,7 @@ namespace Weapon
         {
             _player = GameObject.Find("Player");
             _playerControlScript = _player.GetComponent<Player.TopDownCharacterMover>();
+            _barrel = gameObject.transform.Find("Barrel");
             _currentWeapon = _GetRandomWeapon();
 
             //populate our cooldown dictionary for the weapons
@@ -93,7 +96,7 @@ namespace Weapon
                     projectileScript.type = weapon.Name;
                     projectileScript.damage = weapon.Damage;
                     projectileScript.areaOfEffect = weapon.AreaOfEffect;
-                    Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                    Instantiate(projectile, _barrel.position, parent.transform.rotation * projectile.transform.rotation);
                 }
                 else if (weapon.Name != "SHOT_GUN")
                 {
@@ -114,7 +117,7 @@ namespace Weapon
                     projectileScript.type = weapon.Name;
                     projectileScript.damage = weapon.Damage;
                     projectileScript.areaOfEffect = weapon.AreaOfEffect;
-                    Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                    Instantiate(projectile, _barrel.position, parent.transform.rotation * projectile.transform.rotation);
                 }
                 else
                 {
@@ -134,7 +137,7 @@ namespace Weapon
                             projectileScript.type = weapon.Name;
                             projectileScript.damage = weapon.Damage;
                             projectileScript.areaOfEffect = weapon.AreaOfEffect;
-                            Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                            Instantiate(projectile, _barrel.position, parent.transform.rotation * projectile.transform.rotation);
                         }
                         else if (i % 2 == 0)
                         { //even
@@ -146,7 +149,7 @@ namespace Weapon
                             projectileScript.type = weapon.Name;
                             projectileScript.damage = weapon.Damage;
                             projectileScript.areaOfEffect = weapon.AreaOfEffect;
-                            Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation * Quaternion.Euler(0, 0, 45));
+                            Instantiate(projectile, _barrel.position, parent.transform.rotation * projectile.transform.rotation * Quaternion.Euler(0, 0, 45));
                         }
                         else
                         {  //odd
@@ -158,7 +161,7 @@ namespace Weapon
                             projectileScript.type = weapon.Name;
                             projectileScript.damage = weapon.Damage;
                             projectileScript.areaOfEffect = weapon.AreaOfEffect;
-                            Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation * Quaternion.Euler(0, 0, -45));
+                            Instantiate(projectile, _barrel.position, parent.transform.rotation * projectile.transform.rotation * Quaternion.Euler(0, 0, -45));
                         }
                     }
                 }

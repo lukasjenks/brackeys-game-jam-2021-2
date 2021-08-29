@@ -25,11 +25,15 @@ namespace Player
         private CanvasGroup _canvasG;
         private TextPopper _textPopper;
         private GameObject _player;
+        private Animator _animator;
+        private GameObject _weapon;
         void Awake()
         {
             _player = GameObject.Find("Player");
             _textPopper = GameObject.Find("TEXT_POPPER").GetComponent<TextPopper>();
             _canvasG = GetComponentInChildren<CanvasGroup>();
+            _animator = _player.GetComponentInChildren<Animator>();
+            _weapon = _player.transform.Find("Weapon").gameObject;
         }
 
         void Update()
@@ -39,8 +43,12 @@ namespace Player
                 _setDead = true;
                 _player.GetComponent<TopDownCharacterMover>().isActive = false;
                 _player.GetComponentInChildren<Weapon.Handler>().isActive = false;
-                _textPopper.ShowFlickerText("YOU DIED");
-                StartCoroutine(_ReloadScene(3.0f));
+                Destroy(_weapon);
+
+                _animator.SetBool("Dying", true);
+
+
+                StartCoroutine(_EndAnimation(2.0f));
             }
 
             if (_numHits > 0)
@@ -135,6 +143,20 @@ namespace Player
             yield return new WaitForSeconds(n);
             // Application.LoadLevel(Application.loadedLevel);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        }
+
+        private IEnumerator _EndAnimation(float n)
+        {
+            yield return new WaitForSeconds(n);
+            _animator.SetBool("Dying", false);
+            yield return _PlayEndScreen();
+        }
+
+        private IEnumerator _PlayEndScreen()
+        {
+            yield return new WaitForSeconds(7.2f);
+            _textPopper.ShowFlickerText("YOU DIED");
+            yield return _ReloadScene(3f);
         }
     }
 }

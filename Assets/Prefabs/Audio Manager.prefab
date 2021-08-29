@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2196753586634769403
+--- !u!1 &1420663194011350767
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2196753586634769381}
-  - component: {fileID: 2196753586634769402}
+  - component: {fileID: 1420663194011350769}
+  - component: {fileID: 1420663194011350766}
   m_Layer: 0
   m_Name: Audio Manager
   m_TagString: Untagged
@@ -17,13 +17,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2196753586634769381
+--- !u!4 &1420663194011350769
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2196753586634769403}
+  m_GameObject: {fileID: 1420663194011350767}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,13 +32,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2196753586634769402
+--- !u!114 &1420663194011350766
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2196753586634769403}
+  m_GameObject: {fileID: 1420663194011350767}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 19bb81ccbc1ba4a70be389ec042d5739, type: 3}
@@ -47,16 +47,15 @@ MonoBehaviour:
   sounds:
   - name: Walking
     group: Player Movement
-    clip: {fileID: 0}
-    origin: {fileID: 4498816912062353843, guid: 512f56545d750495b9cdc3d76c2b602c,
-      type: 3}
-    volume: 0
-    pitch: 0
+    clip: {fileID: 8300000, guid: 4b54dd1f4269cc3aba1e131a5e89cb51, type: 3}
+    origin: {fileID: 0}
+    volume: 0.2
+    pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: Soundtrack
     group: Music
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: c42fb3d0abd1b4ead878dde292676ae8, type: 3}
     origin: {fileID: 0}
     volume: 0.1
     pitch: 1
@@ -64,41 +63,41 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Machine Gun
     group: Weapons
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 712a01ccf1476f8a599c2fbb37720ca8, type: 3}
     origin: {fileID: 0}
     volume: 0.1
-    pitch: 1
+    pitch: 2
     loop: 1
     source: {fileID: 0}
   - name: Shotgun
     group: Weapons
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: e9827970729a1f5838d3695f17c80dbc, type: 3}
     origin: {fileID: 0}
     volume: 0.1
     pitch: 1
-    loop: 1
+    loop: 0
     source: {fileID: 0}
   - name: Flamethrower
     group: Weapons
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 3558c187f706ab2b4865540b46216578, type: 3}
     origin: {fileID: 0}
-    volume: 0.1
+    volume: 0.2
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: Rocket Launch
     group: Weapons
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: a410aba78ad0d94ab8a13cad5f2d80d8, type: 3}
     origin: {fileID: 0}
-    volume: 0.1
+    volume: 0.3
     pitch: 1
-    loop: 1
+    loop: 0
     source: {fileID: 0}
   - name: Rocket Explosion
     group: Misc
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 26da2a6cd1f23ee888f9775eb256ee3f, type: 3}
     origin: {fileID: 0}
-    volume: 0.1
+    volume: 0.3
     pitch: 1
-    loop: 1
+    loop: 0
     source: {fileID: 0}

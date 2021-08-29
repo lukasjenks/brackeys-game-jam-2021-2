@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace Player
@@ -62,9 +63,10 @@ namespace Player
 
         private Vector3 _jumpVelocity;
         private AudioManager audioManager;
-
-
+        private Animator _animator;
         private float moveSpeed; // calculated from baseSpeed and sprintSpeed
+        private Vector3 _aimVelocity;
+        private Vector3 _aimVector;
 
         private void Awake()
         {
@@ -76,6 +78,7 @@ namespace Player
             moveSpeed = baseSpeed;
             _jumpVelocity = new Vector3();
             audioManager = FindObjectOfType<AudioManager>();
+            _animator = GetComponentInChildren<Animator>();
         }
 
         // Update is called once per frame
@@ -83,18 +86,10 @@ namespace Player
         {
             if (isActive)
             {
-                if (_cc.isGrounded && playerInput.spacePressed)
+                Vector3 mouseLocation = _GetMousePositionWorldSpace();
+                if (!mouseLocation.Equals(new Vector3()))
                 {
-                    _jumpVelocity.y = jumpForce;
-                    isJumping = true;
-                }
-                else if (!_cc.isGrounded && isJumping)
-                {
-                    _jumpVelocity.y += _gravity * Time.deltaTime;
-                }
-                else
-                {
-                    _jumpVelocity.y = _gravity;
+                    _aimVelocity = _aimVector - mouseLocation;
                 }
 
                 var targetVector = new Vector3(playerInput.inputVector.x, 0, playerInput.inputVector.y);
@@ -106,7 +101,7 @@ namespace Player
                 Vector3 movement = new Vector3();
                 movement += (deltaX * new Vector3(1, 0, 0));
                 movement += (deltaZ * new Vector3(0, 0, 1));
-                movement.y = _jumpVelocity.y;
+                movement.y = _gravity;
 
                 movement = Vector3.ClampMagnitude(movement, moveSpeed);
                 movement *= Time.deltaTime;
@@ -115,47 +110,76 @@ namespace Player
                 {
                     if (!audioManager.IsPlaying("Walking"))
                     {
-                        Debug.Log("Playing Walking Sound");
                         audioManager.Play("Walking");
                     }
                 }
                 else
                 {
-                    Debug.Log("Paused Walking Sound");
                     audioManager.Pause("Walking");
                 }
 
                 _cc.Move(movement);
                 RotateFromMouseVector();
 
-                if (playerInput.shiftPressed)
+                if (_cc.velocity.magnitude > 0.0f)
                 {
-                    if (sprinting)
-                    {
-                        moveSpeed = baseSpeed;
-                        sprinting = false;
-                    }
-                    else
-                    {
-                        moveSpeed = sprintSpeed;
-                        sprinting = true;
-                    }
+                    var forward = (transform.forward - _aimVelocity).magnitude;
+                    var backward = ((-transform.forward) - _aimVelocity).magnitude;
+                    var right = (transform.right - _aimVelocity).magnitude;
+                    var left = ((-transform.right) - _aimVelocity).magnitude;
+
+                    var multiplier = 10000;
+
+                    _animator.SetFloat("ForwardSpeed", forward * multiplier);
+                    _animator.SetFloat("BackwardSpeed", backward * multiplier);
+                    _animator.SetFloat("RightSpeed", right * multiplier);
+                    _animator.SetFloat("LeftSpeed", left * multiplier);
+
+                    // Debug.Log("FORWARD: " + (forward * multiplier));
+                    // Debug.Log("BACKWARD: " + (backward * multiplier));
+                    // Debug.Log("RIGHT: " + (right * multiplier));
+                    // Debug.Log("LEFT: " + (left * multiplier));
+                }
+                else
+                {
+                    _animator.SetFloat("ForwardSpeed", 0.0f);
+                    _animator.SetFloat("BackwardSpeed", 0.0f);
+                    _animator.SetFloat("RightSpeed", 0.0f);
+                    _animator.SetFloat("LeftSpeed", 0.0f);
                 }
             }
         }
 
-        private void RotateFromMouseVector()
+        bool IsCBetweenAB(Vector3 A, Vector3 B, Vector3 C)
+        {
+            return Vector3.Dot((B - A).normalized, (C - B).normalized) < 0f && Vector3.Dot((A - B).normalized, (C - A).normalized) < 0f;
+        }
+
+        private Vector3 _GetMousePositionWorldSpace()
         {
             Ray ray = playerCamera.ScreenPointToRay(playerInput.mousePosition);
+            Vector3 target = new Vector3();
 
             if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
             {
-                var target = hitInfo.point;
+                target = hitInfo.point;
+            }
+
+            return target;
+        }
+
+        private void RotateFromMouseVector()
+        {
+            Vector3 target = _GetMousePositionWorldSpace();
+
+            if (!target.Equals(new Vector3()))
+            {
                 target.y = transform.position.y;
 
                 var qTo = Quaternion.LookRotation(target - transform.position);
                 qTo = Quaternion.Slerp(transform.rotation, qTo, 15f * Time.deltaTime);
                 rb.MoveRotation(qTo);
+                _aimVector = target;
             }
         }
     }

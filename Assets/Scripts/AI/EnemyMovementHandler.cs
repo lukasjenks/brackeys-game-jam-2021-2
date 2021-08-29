@@ -38,6 +38,7 @@ public class EnemyMovementHandler : MonoBehaviour
 
     private const int _DAMAGE_LAYER = 1 << _TERRAIN_LAYER | 1 << _DAMAGEABLE_LAYER;
 
+    private AudioManager audioManager;
 
     void Start()
     {
@@ -55,6 +56,7 @@ public class EnemyMovementHandler : MonoBehaviour
         _playerMoveScript = _player.GetComponent<Player.TopDownCharacterMover>();
         _agent = GetComponent<NavMeshAgent>();
         _CreateHandlerScript();
+		audioManager = FindObjectOfType<AudioManager>();
     }
 
     private void _CreateHandlerScript()
@@ -115,6 +117,8 @@ public class EnemyMovementHandler : MonoBehaviour
                         projectileScript.type = "CREEPER";
                         projectileScript.damage = 500f;
                         projectileScript.areaOfEffect = 2f;
+						//audioManager.SetOrigin("Creeper Attack", this.gameObject);
+                        audioManager.Play("Creeper Attack");
                         Instantiate(
                             projectile,
                             transform.position + Vector3.Scale(transform.forward, new Vector3(2, 2, 2)),

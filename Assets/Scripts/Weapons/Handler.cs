@@ -97,7 +97,7 @@ namespace Weapon
                 }
                 else if (weapon.Name != "SHOT_GUN")
                 {
-                    if (weapon.Name == "MACHINE_GUN" && !audioManager.IsPlaying("Short Gunshot Loop"))
+                    if (weapon.Name == "MACHINE_GUN" && !audioManager.IsPlaying("Machine Gun"))
                     {
                         audioManager.Play("Machine Gun");
                     }

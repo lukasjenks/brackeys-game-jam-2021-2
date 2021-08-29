@@ -61,6 +61,8 @@ namespace Player
         private float _gravity = -9.8f;
 
         private Vector3 _jumpVelocity;
+        private AudioManager audioManager;
+
 
         private float moveSpeed; // calculated from baseSpeed and sprintSpeed
 
@@ -73,6 +75,7 @@ namespace Player
             _cc = GetComponent<CharacterController>();
             moveSpeed = baseSpeed;
             _jumpVelocity = new Vector3();
+            audioManager = FindObjectOfType<AudioManager>();
         }
 
         // Update is called once per frame
@@ -107,6 +110,20 @@ namespace Player
 
                 movement = Vector3.ClampMagnitude(movement, moveSpeed);
                 movement *= Time.deltaTime;
+
+                if (deltaX != 0 || deltaZ != 0)
+                {
+                    if (!audioManager.IsPlaying("Walking"))
+                    {
+                        Debug.Log("Playing Walking Sound");
+                        audioManager.Play("Walking");
+                    }
+                }
+                else
+                {
+                    Debug.Log("Paused Walking Sound");
+                    audioManager.Pause("Walking");
+                }
 
                 _cc.Move(movement);
                 RotateFromMouseVector();

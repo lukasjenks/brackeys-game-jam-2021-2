@@ -22,6 +22,12 @@ namespace Weapon
         private Player.TopDownCharacterMover _playerControlScript;
 
         public bool isActive = true;
+        private AudioManager audioManager;
+
+        void Awake()
+        {
+            audioManager = FindObjectOfType<AudioManager>();
+        }
 
         void Start()
         {
@@ -48,12 +54,13 @@ namespace Weapon
 
                 if (Input.GetButtonUp("Fire1")) // check if they let go of fire, if so we reset the cooldown and switch weapons
                 {
+                    audioManager.StopGroup("Weapons");
+                    _currentWeapon = _GetRandomWeapon();
                     if (_weapons[_currentWeapon].Type == WeaponType.PRECISE)
                     {
                         Destroy(_currentFiringParticles);
                         _currentFiringParticles = null;
                     }
-                    _currentWeapon = _GetRandomWeapon();
                 }
             }
         }
@@ -74,6 +81,8 @@ namespace Weapon
             {
                 if (weapon.Name == "FLAME_THROWER")
                 {
+                    if (!audioManager.IsPlaying("Flamethrower"))
+                        audioManager.Play("Flamethrower");
                     StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
                     GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
                     Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
@@ -85,8 +94,30 @@ namespace Weapon
                     projectileScript.areaOfEffect = weapon.AreaOfEffect;
                     Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
                 }
-                else if (weapon.Name == "SHOT_GUN")
+                else if (weapon.Name != "SHOT_GUN")
                 {
+                    if (weapon.Name == "MACHINE_GUN" && !audioManager.IsPlaying("Short Gunshot Loop"))
+                    {
+                        audioManager.Play("Machine Gun");
+                    }
+                    else if (weapon.Name == "ROCKET_LAUNCHER")
+                    {
+                        audioManager.Play("Rocket Launch");
+                    }
+                    StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
+                    GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
+                    Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
+                    projectileScript.range = weapon.Range;
+                    projectileScript.direction = transform.right;
+                    projectileScript.speed = weapon.ProjectileSpeed;
+                    projectileScript.type = weapon.Name;
+                    projectileScript.damage = weapon.Damage;
+                    projectileScript.areaOfEffect = weapon.AreaOfEffect;
+                    Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                }
+                else
+                {
+                    audioManager.Play("Shotgun");
                     // we spawn 3 here at angles
                     StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
                     // instantiate our forward bullet
@@ -130,20 +161,20 @@ namespace Weapon
                         }
                     }
                 }
-                else
-                {
-                    StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
-                    GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
-                    Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
-                    projectileScript.range = weapon.Range;
-                    projectileScript.direction = transform.right;
-                    projectileScript.speed = weapon.ProjectileSpeed;
-                    projectileScript.type = weapon.Name;
-                    projectileScript.damage = weapon.Damage;
-                    projectileScript.areaOfEffect = weapon.AreaOfEffect;
-                    Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
+                // else
+                // {
+                //     StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
+                //     GameObject projectile = (GameObject)Resources.Load("Prefabs/" + weapon.Projectile);
+                //     Weapon.Projectile projectileScript = projectile.GetComponent<Weapon.Projectile>();
+                //     projectileScript.range = weapon.Range;
+                //     projectileScript.direction = transform.right;
+                //     projectileScript.speed = weapon.ProjectileSpeed;
+                //     projectileScript.type = weapon.Name;
+                //     projectileScript.damage = weapon.Damage;
+                //     projectileScript.areaOfEffect = weapon.AreaOfEffect;
+                //     Instantiate(projectile, transform.position, parent.transform.rotation * projectile.transform.rotation);
 
-                }
+                // }
             }
             else if (weapon.Type == Weapon.WeaponType.AREA)
             {

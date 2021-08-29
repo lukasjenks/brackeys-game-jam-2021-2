@@ -33,7 +33,7 @@ public class TextPopper : MonoBehaviour
 
     IEnumerator FlickerIn(float time)
     {
-        EasingFunction.Ease ease = EasingFunction.Ease.EaseInElastic;
+        EasingFunction.Ease ease = EasingFunction.Ease.EaseInCubic;
         EasingFunction.Function func = EasingFunction.GetEasingFunction(ease);
 
         var elapsedTime = 0.0f;
@@ -44,8 +44,6 @@ public class TextPopper : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
-        yield return FlickerOut(time - 1.0f);
     }
 
     IEnumerator FlickerOut(float time)

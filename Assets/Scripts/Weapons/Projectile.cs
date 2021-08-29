@@ -15,10 +15,19 @@ namespace Weapon
         private Vector3 _startVector;
         private Collider _collider;
         private NPC.Gibber _gibber;
+        private bool _creeperOnCooldown = false;
         private bool _dying;
 
-        private const int _DAMAGE_LAYER = 1 << 6 | 1 << 9;
+        private const int _DAMAGEABLE_LAYER = 6;
+        private const int _TERRAIN_LAYER = 9;
 
+        private const int _DAMAGE_LAYER = 1 << _TERRAIN_LAYER | 1 << _DAMAGEABLE_LAYER;
+
+        private AudioManager audioManager;
+
+        void Awake() {
+            audioManager = FindObjectOfType<AudioManager>();
+        }
 
         void Start()
         {
@@ -37,7 +46,7 @@ namespace Weapon
                 foreach (var hitCollider in hitColliders)
                 {
                     var distance = Vector3.Distance(transform.position, hitCollider.gameObject.transform.position);
-                    if (hitCollider.gameObject.tag == "Enemy" && distance <= areaOfEffect)
+                    if (hitCollider.gameObject.tag == "Enemy" && distance <= areaOfEffect && type != "CREEPER")
                     {
                         EnemyMovementHandler tempEnemyHandler = hitCollider.gameObject.GetComponent<EnemyMovementHandler>();
                         if (tempEnemyHandler.enemyScript.TakeDamage(damage / distance))
@@ -46,11 +55,28 @@ namespace Weapon
                             NPC.Manager.npcDict.Remove(hitCollider.gameObject.GetInstanceID().ToString());
                             Destroy(hitCollider.gameObject);
                         }
+                        if (!_dying)
+                        {
+                            _OnDeath();
+                        }
                     }
-                }
-                if (!_dying)
-                {
-                    _OnDeath();
+                    else if (type == "CREEPER" && hitCollider.gameObject.tag == "Player" && !_creeperOnCooldown)
+                    {
+                        _creeperOnCooldown = true;
+                        Player.Stats stats = hitCollider.gameObject.GetComponent<Player.Stats>() != null ? hitCollider.gameObject.GetComponent<Player.Stats>() : hitCollider.gameObject.GetComponentInParent<Player.Stats>();
+                        stats.GetHit(Player.HitType.CREEPER);
+                        if (!_dying)
+                        {
+                            _OnDeath();
+                        }
+                    }
+                    else if (hitCollider.gameObject.tag == "Terrain")
+                    {
+                        if (!_dying)
+                        {
+                            _OnDeath();
+                        }
+                    }
                 }
             }
         }
@@ -81,6 +107,7 @@ namespace Weapon
                     _TurnInvisible();
                     GameObject explosion = (GameObject)Resources.Load("Prefabs/EXPLOSION");
                     GameObject explosionInstance = Instantiate(explosion, transform.position, explosion.transform.rotation);
+                    audioManager.Play("Rocket Explosion");
                     StartCoroutine(_WaitForExplosionToFinish(explosionInstance, gameObject));
                     break;
 
@@ -121,6 +148,7 @@ namespace Weapon
         {
             yield return new WaitForSeconds(value);
             Destroy(gameObject);
+            _creeperOnCooldown = false;
         }
     }
 }

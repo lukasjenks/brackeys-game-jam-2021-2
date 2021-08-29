@@ -26,11 +26,17 @@ public class EnemyMovementHandler : MonoBehaviour
     private bool _hunterPathCreated = false;
     private bool _hunterCoroutineStarted = false;
     private int _hunterTarget;
+    private bool _hunterAttackOnCoolDown = false;
 
     // CREEP SPECIFIC VARIABLES
 
     private float _creepCoolDown = 2.0f;
     private bool _creepOnCoolDown = false;
+
+    private const int _DAMAGEABLE_LAYER = 6;
+    private const int _TERRAIN_LAYER = 6;
+
+    private const int _DAMAGE_LAYER = 1 << _TERRAIN_LAYER | 1 << _DAMAGEABLE_LAYER;
 
 
     void Start()
@@ -96,7 +102,6 @@ public class EnemyMovementHandler : MonoBehaviour
                 // if we're close enough we throw projectiles
                 if (Vector3.Distance(transform.position, _player.transform.position) <= _agent.stoppingDistance)
                 {
-                    Debug.Log("We can throw!");
                     // StartCoroutine(HandleCoolDown(weapon.RateOfFire, weapon.Name));
                     if (!_creepOnCoolDown)
                     {
@@ -136,11 +141,33 @@ public class EnemyMovementHandler : MonoBehaviour
 
                     if (Vector3.Distance(transform.position, _hunterPath[_hunterTarget]) > 6.0f)
                     {
-                        EasingFunction.Ease ease = EasingFunction.Ease.EaseInElastic;
-                        EasingFunction.Function func = EasingFunction.GetEasingFunction(ease);
-
                         transform.LookAt(_hunterPath[_hunterTarget]);
                         enemyScript.MoveToPosition(_hunterPath[_hunterTarget]);
+
+                        if (!_onCoolDown)
+                        {
+                            _onCoolDown = true;
+                            bool hitPlayer = false;
+                            // check for a collision here with the player
+                            Collider[] hitColliders = Physics.OverlapSphere(transform.position, 5f, _DAMAGE_LAYER);
+                            foreach (var hitCollider in hitColliders)
+                            {
+                                if (hitCollider.gameObject.tag == "Player")
+                                {
+                                    Player.Stats stats = hitCollider.gameObject.GetComponent<Player.Stats>() != null ? hitCollider.gameObject.GetComponent<Player.Stats>() : hitCollider.gameObject.GetComponentInParent<Player.Stats>();
+                                    stats.GetHit(Player.HitType.HUNTER);
+                                    _hunterCoroutineStarted = true;
+                                    hitPlayer = true;
+                                    StartCoroutine(_WaitThenCalculatePath(3.5f));
+                                    break;
+                                }
+                            }
+
+                            if (!hitPlayer)
+                            {
+                                _onCoolDown = false;
+                            }
+                        }
                     }
                     else
                     {
@@ -213,6 +240,7 @@ public class EnemyMovementHandler : MonoBehaviour
         yield return new WaitForSeconds(n);
         _hunterPathCreated = false;
         _hunterCoroutineStarted = false;
+        _onCoolDown = false;
     }
 
     private IEnumerator _ChangeSpeedAfterNSeconds(float n, float value)

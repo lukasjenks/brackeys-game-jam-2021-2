@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Weapon namespace
 namespace Weapon
 {
     public class Handler : MonoBehaviour
